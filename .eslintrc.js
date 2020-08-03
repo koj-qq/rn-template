@@ -6,7 +6,7 @@ module.exports = {
     'plugin:react/recommended',
     'prettier/@typescript-eslint', // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
     'plugin:prettier/recommended', // Enables eslint-plugin-prettier and displays prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
-    'prettier/react'
+    'prettier/react',
   ],
   settings: {
     react: {
@@ -20,9 +20,11 @@ module.exports = {
     useJSXTextNode: true,
   },
   rules: {
-    'complexity': ['warn', { max: 6 }],
+    complexity: ['warn', { max: 6 }],
     'no-unused-vars': 'error',
     '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': 'off',

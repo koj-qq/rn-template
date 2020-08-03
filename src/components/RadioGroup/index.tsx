@@ -23,7 +23,7 @@ function Radio({
   label,
   checked,
   onChange,
-  disabled = false
+  disabled = false,
 }: {
   label: string;
   checked: boolean;
@@ -34,7 +34,8 @@ function Radio({
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={disabled ? undefined : onChange}
-      style={{ justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}>
+      style={{ justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row' }}
+    >
       <View style={[styles.radio, checked && !disabled && { borderColor: Color.primary }]}>
         {checked && <View style={[styles.checked, disabled && { backgroundColor: Color.grayBG }]} />}
       </View>
@@ -82,7 +83,8 @@ export default function RadioGroup({ data, value, onChange, isOneLine = true }: 
           key={item.value}
           onPress={item.disabled ? undefined : () => handleChange(item.value)}
           disabled={item.disabled}
-          extra={<Radio checked={item.value === currentValue} label="" />}>
+          extra={<Radio checked={item.value === currentValue} label="" />}
+        >
           <ListItemText text={item.label} />
         </List.Item>
       ))}
@@ -96,19 +98,19 @@ const styles = StyleSheet.create({
     height: px(18),
     borderRadius: px(18),
     borderWidth: Size.ONE_PIXEL,
-    borderColor: Color.placeholderTextColor,
+    borderColor: Color.maskBgColor,
     marginRight: px(5),
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   checked: {
     backgroundColor: Color.primary,
     width: px(12),
     height: px(12),
-    borderRadius: px(12)
+    borderRadius: px(12),
   },
   radioText: {
     color: Color.helpTextColor,
-    fontSize: px(14)
-  }
+    fontSize: px(14),
+  },
 });

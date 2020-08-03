@@ -1,39 +1,86 @@
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 黄姗姗
- * @Date: 2019-12-23 16:38:47
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-04-26 15:21:53
- */
-/**
- * 根据数的大小进行单位转换
- * 这个函数不能引入外部变量或方法，否则会引起echarts图表异常！
- * */
-export const valueFormat = (value: number) => {
-  let valueStr: number | string = value;
-  const fixDecimalPlace = (num: number, fixNum = 2) => (('' + num).includes('.') ? num.toFixed(fixNum) : num);
-  if (value >= 10000 && value < 100000000) {
-    valueStr = fixDecimalPlace(value / 10000) + '万';
-  }
-  if (value >= 100000000) {
-    valueStr = fixDecimalPlace(value / 100000000) + '亿';
-  }
-  return valueStr;
-};
-
-/**
- * 0-9的整数 在前面补0
- * 用于月份、时分秒的情况
- * */
-export const fillZero = (num: string | number) => (/^[0-9]$/.test('' + num) ? `0${num}` : num);
+import produce from 'immer';
+import DeviceInfo from 'react-native-device-info';
 
 /**
  * 用于字符长度超过指定个数自动截取并添加...
  */
-export const textEllipsis = (text: string, length = 12) => {
+export const textEllipsis = (text: string, length: number) => {
   if (text.length > length && length > 0) {
-    return `${text.substr(0, length)}...`;
+    return `${text.substring(0, length)}...`;
   }
   return text;
+};
+
+export function convertNullToEmptyString<T extends {}>(obj: T) {
+  return produce(obj, draft => {
+    Object.entries(draft).forEach(([key, val]) => {
+      if (val === null || val === undefined) {
+        draft[key] = '';
+      }
+    });
+  });
+}
+
+/**
+ * 格式化数字
+ * @param value
+ * @param dots 小数位
+ */
+export const formatNumber = (value?: number | string, dots = 4) => {
+  if (value) {
+    if (typeof value === 'string' && !Number.isNaN(+value)) {
+      return Number(value).toFixed(dots);
+    } else if (typeof value === 'number') {
+      return Number(value).toFixed(dots);
+    }
+  }
+  return '0';
+};
+
+// eslint-disable-next-line complexity
+export const compareVersion = (targetVersion: string): number => {
+  const currentVersion = DeviceInfo.getVersion();
+
+  const GTR = 1; //大于
+  const LSS = -1; //小于
+  const EQU = 0; //等于
+
+  const currentVersionArry = currentVersion.split('.').map(function (a) {
+    return parseInt(a);
+  });
+  const targetVersionArry = targetVersion.split('.').map(function (a) {
+    return parseInt(a);
+  });
+  const arrLen = Math.max(currentVersionArry.length, targetVersionArry.length);
+
+  //检查空字符串，任何非空字符串都大于空字符串
+  if (currentVersion.length == 0 && targetVersion.length == 0) {
+    return EQU;
+  } else if (currentVersion.length == 0) {
+    return LSS;
+  } else if (targetVersion.length == 0) {
+    return GTR;
+  }
+
+  let result = EQU;
+  //循环比较版本号
+  for (let i = 0; i < arrLen; i++) {
+    result = compareNumber(currentVersionArry[i], targetVersionArry[i]);
+    if (result == EQU) {
+      continue;
+    } else {
+      break;
+    }
+  }
+  return result;
+
+  function compareNumber(n1 = 0, n2 = 0) {
+    if (n1 > n2) {
+      return GTR;
+    } else if (n1 < n2) {
+      return LSS;
+    } else {
+      return EQU;
+    }
+  }
 };

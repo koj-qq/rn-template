@@ -20,12 +20,13 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-project.xcworkspace
 
 # Android/IntelliJ
 #
 build/
 .idea
+.vscode
+.eslintcache
 .gradle
 local.properties
 *.iml
@@ -43,6 +44,7 @@ package-lock.json
 buck-out/
 \.buckd/
 *.keystore
+!debug.keystore
 
 # fastlane
 #
@@ -60,9 +62,5 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
-Podfile.lock
-.vscode/.react/debuggerWorker.js
-.vscode/.react/index.bundle
-.vscode/.react/index.map
 
-.eslintcache
+.mocks/

@@ -1,11 +1,3 @@
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2019-09-25 22:23:51
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-04-16 17:02:17
- */
 import { Dimensions, Platform, StyleSheet } from 'react-native';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -57,5 +49,5 @@ export default {
   px,
   DEVICE_WIDTH,
   DEVICE_HEIGHT,
-  ONE_PIXEL: StyleSheet.hairlineWidth
+  ONE_PIXEL: StyleSheet.hairlineWidth,
 };

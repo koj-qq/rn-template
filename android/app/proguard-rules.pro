@@ -7,6 +7,10 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
--keep class com.facebook.hermes.unicode.** { *; }
 # Add any project specific keep options here:
--keep public class com.horcrux.svg.** {*;}
+-keep class com.tencent.mm.sdk.** {
+  *;
+}
+-keep class com.thundersdata.rntemplate.BuildConfig { 
+  *; 
+}

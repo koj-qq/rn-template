@@ -1,22 +1,16 @@
 import React from 'react';
 import { TextInput, TextInputProps, StyleSheet, StyleProp, TextStyle } from 'react-native';
-import { Size, Color } from '../../config';
+import { Color, Size } from '@/config';
 
 const Input: React.FC<TextInputProps> = ({ style, ...props }) => (
-  <TextInput
-    placeholderTextColor={Color.placeholderTextColor}
-    style={[styles.input, style] as StyleProp<TextStyle>}
-    {...props}
-  />
+  <TextInput style={[styles.input, style] as StyleProp<TextStyle>} {...props} />
 );
-
 export default Input;
 
 const styles = StyleSheet.create({
   input: {
-    color: Color.mainTextColor,
-    height: Size.px(44),
+    color: Color.black,
+    height: Size.px(40),
     padding: 0,
-    fontSize: Size.px(14)
-  }
+  },
 });

@@ -1,27 +1,19 @@
-/*
- * @文件描述: 一个基于FlatList的列表下拉、上拉刷新控件
- * @公司: thundersdata
- * @作者: 陈杰
- * @LastEditors: 黄姗姗
- * @Date: 2019-09-25 19:25:00
- * @LastEditTime: 2020-05-07 16:49:40
- */
 import React, { PureComponent } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  ListRenderItem,
   Image,
   ViewStyle,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  ListRenderItemInfo,
 } from 'react-native';
-import { Size, Color } from '../../config';
-import DataEmpty from '../DataEmpty';
+import { Size } from '@/config';
+import { FOOTER_TIPS } from '@/common';
+import { SwipeListView, RowMap } from 'react-native-swipe-list-view';
 
 export const RefreshState = {
   /**加载成功 */
@@ -35,7 +27,7 @@ export const RefreshState = {
   /**加载失败 */
   Failure: 4,
   /**没有数据 */
-  EmptyData: 5
+  EmptyData: 5,
 };
 
 interface Props<T> {
@@ -48,18 +40,13 @@ interface Props<T> {
   footerFailureText?: string;
   footerNoMoreDataText?: string;
   footerEmptyDataText?: string;
-  renderItem: ListRenderItem<T>;
+  renderItem: (rowData: ListRenderItemInfo<T>, rowMap: RowMap<T>) => JSX.Element | null;
+  renderHiddenItem?: (rowData: ListRenderItemInfo<T>, rowMap: RowMap<T>) => JSX.Element;
   style?: ViewStyle;
+  ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null;
 }
 
 class RefreshListView<T> extends PureComponent<Props<T>> {
-  public static defaultProps = {
-    footerRefreshingText: '数据加载中…',
-    footerFailureText: '点击重新加载',
-    footerNoMoreDataText: '已加载全部数据',
-    footerEmptyDataText: '暂无数据'
-  };
-
   private onHeaderRefresh = () => {
     if (this.shouldStartHeaderRefreshing()) {
       this.props.onHeaderRefresh(RefreshState.HeaderRefreshing);
@@ -92,14 +79,8 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
     return refreshState === RefreshState.Idle;
   };
 
-  _flatList!: FlatList<T> | null;
-
-  scrollToTop = () => {
-    this._flatList && this._flatList.scrollToOffset({ animated: true, offset: 0 });
-  };
-
   public render() {
-    const { renderItem, style, refreshState, keyExtractor, data = [], ...rest } = this.props;
+    const { renderItem, renderHiddenItem, style, refreshState, keyExtractor, data = [], ...rest } = this.props;
     if (data.length === 0 && refreshState === RefreshState.Idle) {
       return (
         <ScrollView
@@ -108,14 +89,15 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
               refreshing={refreshState === RefreshState.HeaderRefreshing}
               onRefresh={this.onHeaderRefresh}
             />
-          }>
-          <DataEmpty visible />
+          }
+        >
+          <Text>暂无数据</Text>
         </ScrollView>
       );
     }
     return (
-      <FlatList
-        ref={flatList => (this._flatList = flatList)}
+      <SwipeListView
+        useFlatList
         style={style}
         keyExtractor={keyExtractor}
         onEndReached={this.onEndReached}
@@ -124,6 +106,7 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
         ListFooterComponent={this.renderFooter}
         onEndReachedThreshold={0.1}
         renderItem={renderItem}
+        renderHiddenItem={renderHiddenItem}
         data={data}
         {...rest}
       />
@@ -140,7 +123,7 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
       footerNoMoreDataText,
       footerEmptyDataText,
       refreshState,
-      data = []
+      data = [],
     } = this.props;
 
     switch (refreshState) {
@@ -157,9 +140,10 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
               } else {
                 this.props.onFooterRefresh && this.props.onFooterRefresh(RefreshState.FooterRefreshing);
               }
-            }}>
+            }}
+          >
             <View style={styles.footerContainer}>
-              <Text style={styles.footerText}>{footerFailureText}</Text>
+              <Text style={styles.footerText}>{footerFailureText || FOOTER_TIPS.footerFailureText}</Text>
             </View>
           </TouchableOpacity>
         );
@@ -171,18 +155,19 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
             activeOpacity={0.8}
             onPress={() => {
               this.props.onHeaderRefresh && this.props.onHeaderRefresh(RefreshState.HeaderRefreshing);
-            }}>
+            }}
+          >
             <View style={styles.emptyFooter}>
               <Image
                 style={{
                   width: Size.px(140),
                   height: Size.px(140),
-                  marginBottom: Size.px(10)
+                  marginBottom: Size.px(10),
                 }}
-                source={require('../../assets/pic_empty.png')}
+                source={require('@/assets/pic_empty.png')}
                 resizeMode="contain"
               />
-              <Text style={styles.footerText}>{footerEmptyDataText}</Text>
+              <Text style={styles.footerText}>{footerEmptyDataText || FOOTER_TIPS.footerEmptyDataText}</Text>
             </View>
           </TouchableOpacity>
         );
@@ -192,7 +177,9 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
         footer = (
           <View style={styles.footerContainer}>
             <ActivityIndicator size="small" color="#888888" />
-            <Text style={[styles.footerText, { marginLeft: 7 }]}>{footerRefreshingText}</Text>
+            <Text style={[styles.footerText, { marginLeft: 7 }]}>
+              {footerRefreshingText || FOOTER_TIPS.footerRefreshingText}
+            </Text>
           </View>
         );
         break;
@@ -200,7 +187,7 @@ class RefreshListView<T> extends PureComponent<Props<T>> {
       case RefreshState.NoMoreData: {
         footer = (
           <View style={styles.footerContainer}>
-            <Text style={styles.footerText}>{footerNoMoreDataText}</Text>
+            <Text style={styles.footerText}>{footerNoMoreDataText || FOOTER_TIPS.footerNoMoreDataText}</Text>
           </View>
         );
         break;
@@ -217,19 +204,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: Size.px(10)
+    padding: Size.px(10),
   },
   footerText: {
     fontSize: Size.px(12),
-    color: Color.helpTextColor
+    color: 'rgba(0, 0, 0, 0.2)',
   },
   emptyFooter: {
     flex: 1,
     height: Size.px(300),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: Size.px(10)
-  }
+    padding: Size.px(10),
+  },
 });
 
 export default RefreshListView;

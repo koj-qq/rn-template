@@ -1,23 +1,7 @@
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2019-10-09 21:11:04
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-08 17:59:22
- */
-type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;
-
-declare module 'react-native-render-html' {
-  interface RenderHtmlProps {
-    html: string;
-    imagesMaxWidth: number;
-  }
-
-  export default class RenderHtml extends React.Component<RenderHtmlProps> {}
-}
-
-declare module '@bang88/china-city-data';
+declare const navigator = any;
+declare module 'react-native-config-reader';
+declare module 'react-native-background-timer';
+declare module 'react-native-settings';
 
 declare module 'react-native-switch' {
   export interface SwitchProps {
@@ -31,9 +15,10 @@ declare module 'react-native-switch' {
     circleInactiveBorderColor?: string;
     circleActiveBorderColor?: string;
     disabled?: boolean;
+    useNativeDriver?: boolean;
   }
 
   export class Switch extends React.Component<SwitchProps> {}
 }
 
-declare module 'react-native-safe-area-view';
+type Merge<M, N> = Omit<M, Extract<keyof M, keyof N>> & N;

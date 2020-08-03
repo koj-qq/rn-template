@@ -1,14 +1,6 @@
-/*
- * @文件描述: 自定义的开关组件
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2020-04-10 15:09:39
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-04-29 18:07:41
- */
 import React, { useState, useEffect } from 'react';
 import { Switch, SwitchProps } from 'react-native-switch';
-import { Color, Size } from '../../config';
+import { Color, Size } from '@/config';
 
 type CustomSwitchProps = Omit<SwitchProps, 'onValueChange'> & { onChange?: (value: boolean) => void };
 
@@ -26,6 +18,7 @@ const CustomSwitch: React.FC<CustomSwitchProps> = props => {
 
   return (
     <Switch
+      useNativeDriver={true}
       value={checked}
       onValueChange={handleChange}
       backgroundActive={props.backgroundActive}
@@ -36,10 +29,13 @@ const CustomSwitch: React.FC<CustomSwitchProps> = props => {
       circleActiveBorderColor={props.circleActiveBorderColor}
       circleInactiveBorderColor={props.circleInactiveBorderColor}
       disabled={props.disabled}
+      renderActiveText={false}
+      renderInActiveText={false}
     />
   );
 };
 CustomSwitch.defaultProps = {
+  useNativeDriver: true,
   backgroundActive: Color.primary,
   backgroundInactive: Color.backgroundColor,
   circleActiveColor: Color.white,
@@ -47,7 +43,7 @@ CustomSwitch.defaultProps = {
   circleBorderWidth: Size.ONE_PIXEL,
   circleInactiveBorderColor: Color.borderColor,
   circleActiveBorderColor: Color.borderColor,
-  disabled: false
+  disabled: false,
 };
 
 export default React.memo(CustomSwitch);

@@ -17,10 +17,10 @@ BASE_COLORS.forEach((color, index) => {
   colors.push(
     ...generate(color)
       .slice(START_INDEX, END_INDEX)
-      .filter((_color, i) => i % 2 === 0)
-      .map((filterColor, i) => ({
+      .filter((_color: string, i: number) => i % 2 === 0)
+      .map((filterColor: string, i: number) => ({
         color: filterColor,
-        sortValue: index + i * ROW_NUMBER
+        sortValue: index + i * ROW_NUMBER,
       }))
   );
 });

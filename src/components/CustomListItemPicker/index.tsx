@@ -1,23 +1,14 @@
-/*
- * @文件描述: 用于List.Item和CustomPicker组合的选择框，主要用于表单里选择数据
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2020-04-15 10:33:56
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-04-30 16:24:56
- */
 import React from 'react';
 import CustomPicker, { CustomPickerProps } from '../CustomPicker';
 import { List } from '@ant-design/react-native';
-import { toastFail } from '../../common';
 import ListItemText from '../ListItemText';
 import { ListItemPropsType } from '@ant-design/react-native/lib/list/PropsType';
+import useToast from '@/hooks/useToast';
 
 interface CustomListItemPickerProps extends CustomPickerProps, Pick<ListItemPropsType, 'arrow'> {
   onPress?: () => void;
   text: string;
   required?: boolean;
-  isError?: boolean;
 }
 export default function CustomListItemPicker({
   cols = 1,
@@ -31,8 +22,8 @@ export default function CustomListItemPicker({
   onPress,
   text,
   required = false,
-  isError
 }: CustomListItemPickerProps) {
+  const { toastFail } = useToast();
   const _extra = data.length > 0 ? '请选择' : '暂无数据';
 
   return (
@@ -43,7 +34,8 @@ export default function CustomListItemPicker({
       data={data}
       disabled={disabled || data.length === 0}
       value={value}
-      onChange={onChange}>
+      onChange={onChange}
+    >
       <List.Item
         arrow={arrow}
         onPress={() => {
@@ -55,8 +47,9 @@ export default function CustomListItemPicker({
             toastFail('暂无数据');
             return;
           }
-        }}>
-        <ListItemText isError={isError} text={text} required={required} />
+        }}
+      >
+        <ListItemText text={text} required={required} />
       </List.Item>
     </CustomPicker>
   );

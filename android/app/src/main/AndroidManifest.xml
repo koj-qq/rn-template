@@ -1,15 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.luneng">
+  package="com.thundersdata.rntemplate">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!-- If you want to play audio from a URL, you need to add these permissions -->
+    <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 文件权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 摄像头权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 定位权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
       android:name=".MainApplication"
@@ -17,25 +23,57 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
+      android:theme="@style/AppTheme"
       android:usesCleartextTraffic="true"
-      android:theme="@style/AppTheme">
-
+      android:requestLegacyExternalStorage="true">
+      
       <!--安卓全面屏适配-->
       <meta-data android:name="android.max_aspect" android:value="2.1" />
+      <meta-data android:name="JPUSH_CHANNEL" android:value="${JPUSH_CHANNEL}" />
+      <meta-data android:name="JPUSH_APPKEY" android:value="${JPUSH_APPKEY}" />  
 
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
-        android:screenOrientation="portrait"
-        android:resizeableActivity="true"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+        android:launchMode="singleTask"
         android:windowSoftInputMode="adjustPan">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+            <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
         </intent-filter>
+
+        <!-- 添加Deep Linking -->
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <!-- Accepts URIs that begin with "https://rntemplate/app” -->
+          <data android:scheme="https"
+            android:host="rntemplate"
+            android:pathPrefix="/app" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW" />
+          <category android:name="android.intent.category.DEFAULT" />
+          <category android:name="android.intent.category.BROWSABLE" />
+          <!-- Accepts URIs that begin with "rntemplate://” -->
+          <data android:scheme="rntemplate" />
+        </intent-filter>
+        <!-- 添加Deep Linking -->
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <activity
+          android:name=".wxapi.WXEntryActivity"
+          android:label="@string/app_name"
+          android:exported="true"
+          android:taskAffinity="com.thundersdata.rntemplate"
+          android:launchMode="singleTask"/>
+      <activity
+          android:name=".wxapi.WXPayEntryActivity"
+          android:label="@string/app_name"
+          android:exported="true"/>
     </application>
 
 </manifest>

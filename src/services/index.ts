@@ -1,8 +1,8 @@
-import { defs as recruitmentDefs, recruitment } from './recruitment';
+import { defs as authorizationDefs, authorization } from './authorization';
 
 (global as any).defs = {
-  recruitment: recruitmentDefs
+  authorization: authorizationDefs,
 };
 (global as any).API = {
-  recruitment
+  authorization,
 };

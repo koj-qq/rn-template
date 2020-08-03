@@ -1,52 +1,99 @@
+navigator.geolocation = require('@react-native-community/geolocation');
 import 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useMemo, useReducer } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from '@ant-design/react-native';
+import zhCN from '@ant-design/react-native/es/locale-provider/zh_CN';
 import SplashScreen from 'react-native-splash-screen';
-import { enableScreens } from 'react-native-screens';
-import { SignInContext } from './context/SignInContext';
-import { MainStack } from './stacks/mainStack';
-import { SignInStack } from './stacks/signInStack';
-import store from './store';
-import { isSignedIn } from './utils/auth';
-import Orientation from 'react-native-orientation-locker';
+
+import Loading from '@/screens/loading';
 import '@/services';
+import { AuthContext } from '@/context/AuthContext';
+import { SignInStack } from '@/stacks/signInStack';
+import { MainStack } from '@/stacks/mainStack';
+import useJPush from '@/hooks/useJPush';
+import { isSignedIn, signOut as loginOut } from '@/utils/auth';
+import linking from './linking';
+import theme from './theme';
 
-const { Provider: StoreProvider } = store;
-enableScreens();
+type State = {
+  loading: boolean;
+  signedIn: boolean;
+};
+
 const App = () => {
-  const [signedIn, setSignedIn] = useState(true);
-  const [checkedSignIn, setCheckedSignIn] = useState(true);
+  useJPush();
 
-  useEffect(() => {
-    Orientation.lockToPortrait();
-  }, []);
+  const [state, dispatch] = useReducer(
+    (prevState: State, action: { type: string; signedIn: boolean }) => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            loading: false,
+            signedIn: action.signedIn,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            loading: false,
+            signedIn: true,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            loading: false,
+            signedIn: false,
+          };
+        default:
+          return {
+            loading: true,
+            signedIn: false,
+          };
+      }
+    },
+    {
+      loading: true,
+      signedIn: false,
+    }
+  );
 
-  /**系统初始化时，判断是否已经登录 */
   useEffect(() => {
     (async () => {
-      await isSignedIn();
-      setSignedIn(true);
-      setCheckedSignIn(true);
+      const signedIn = await isSignedIn();
+      dispatch({ type: 'RESTORE_TOKEN', signedIn });
       SplashScreen.hide();
     })();
   }, []);
 
-  if (!checkedSignIn) {
-    return null;
+  const authContext = useMemo(
+    () => ({
+      signIn() {
+        dispatch({ type: 'SIGN_IN', signedIn: true });
+      },
+      async signOut() {
+        await loginOut();
+        dispatch({ type: 'SIGN_OUT', signedIn: false });
+      },
+    }),
+    []
+  );
+
+  if (state.loading) {
+    return <Loading />;
   }
+
   return (
-    <SignInContext.Provider
-      value={{
-        setSignedIn,
-        setCheckedSignIn
-      }}>
-      <StoreProvider>
-        <SafeAreaProvider>
-          <NavigationContainer>{signedIn ? <MainStack /> : <SignInStack />}</NavigationContainer>
-        </SafeAreaProvider>
-      </StoreProvider>
-    </SignInContext.Provider>
+    <Provider locale={zhCN} theme={theme}>
+      <SafeAreaProvider>
+        <AuthContext.Provider value={authContext}>
+          <NavigationContainer linking={linking} fallback={<Loading />}>
+            {state.signedIn ? <MainStack /> : <SignInStack />}
+          </NavigationContainer>
+        </AuthContext.Provider>
+      </SafeAreaProvider>
+    </Provider>
   );
 };
 

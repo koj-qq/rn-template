@@ -1,40 +1,20 @@
-import { Rule, InternalNamePath } from 'rc-field-form/lib/interface';
+import { Rule } from 'rc-field-form/es/interface';
 
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2019-06-27 17:43:30
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-07 10:26:28
- */
-export const MAX_LENGTH_USERNAME = 16;
-export const MAX_LENGTH_PASSWORD = 16;
-export const MIN_LENGTH_PASSWORD = 6;
-export const MAX_LENGTH_TITLE = 50;
-export const MAX_LENGTH_DESC = 200;
-export const MAX_LENGTH_COMMENT = 100;
 export const MAX_LENGTH_PHONE = 11;
+export const MAX_LENGTH_PASSWORD = 14;
+export const MIN_LENGTH_PASSWORD = 8;
 export const MAX_LENGTH_SMS = 6;
-export const LABEL_NUMBER = 5;
 
-/**
- * 评分校验规则
- * @param _
- * @param value
- * @param callback
- */
-export const ratingValidator = (_: Rule, value: number, callback: (msg?: string) => void) => {
-  if (value > 0) {
-    callback();
-  } else {
-    callback('');
-  }
+export const phoneRegex = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/;
+export const IDCardRegex = /^(\d{18,18}|\d{15,15}|\d{17,17}X)$/;
+
+export const isPhone = (phone: string) => {
+  return phoneRegex.test(phone);
 };
 
-/**
- * 表单项是否处于error状态
- */
-export const isError = (errorNames: InternalNamePath = [], fieldName: string) => {
-  return errorNames.includes(fieldName);
+export const passwordValidator = (password: string) => (_: Rule, value: string) => {
+  if (!value || password === value) {
+    return Promise.resolve();
+  }
+  return Promise.reject('两次密码不一致');
 };

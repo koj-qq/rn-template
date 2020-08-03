@@ -1,13 +1,24 @@
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2020-01-14 11:16:15
- * @LastEditors: 于效仟
- * @LastEditTime: 2020-04-30 11:36:24
- */
 import echarts from 'echarts';
-import { InternalNamePath } from 'rc-field-form/lib/interface';
+
+export const tuple = <T extends string[]>(...args: T) => args;
+export interface Pagination<T> {
+  page: number;
+  pageSize: number;
+  total: number;
+  list: T[];
+}
+export interface AjaxResponse<T> {
+  code: number;
+  data: T;
+  message: string;
+  success: boolean;
+}
+export interface AuthResponse<T> {
+  code: number;
+  msg: string;
+  result: T;
+  success: boolean;
+}
 
 // 与后台接口约定返回的配置项
 export interface BaseChartOption {
@@ -16,74 +27,15 @@ export interface BaseChartOption {
   series: echarts.EChartOption.Series[];
 }
 
-/**
- * 饼图数据
- */
-export interface PieData {
-  name: string;
-  value: number;
-}
-
-/**
- * 雷达图Indicator数据
- */
-export interface RadarIndicatorData {
-  name: string;
-  max: number;
-}
-
-// 指标类非图表通用约定
-export interface BaseQuotaType {
-  name: string;
-  value: number;
-  unit?: string;
-  percentage?: number;
-}
-
-export type valueType = string | number;
-
-export type valuesType = Array<string | number>;
-
-export interface PickerDataType extends SelectOption {
-  name?: string;
-  children?: PickerDataType[];
-}
-
-export interface SelectOption {
-  label: string;
-  value: valueType;
-  [key: string]: unknown;
-}
-
 export type EChartOption = Merge<
   echarts.EChartOption,
   { legend?: echarts.EChartOption.Legend | echarts.EChartOption.Legend[] }
 >;
 
-// 子组件的通用props定义
-export interface ChildrenProps {
-  refreshing: boolean;
-  onFetchFinish: () => void;
+export interface SelectOption {
+  label: string;
+  value: number | string;
+  [key: string]: unknown;
 }
 
-export interface ActionProps {
-  type: string;
-  value: string;
-}
-
-export interface CascadeDataType extends SelectOption {
-  children?: CascadeDataType[];
-}
-
-export type ErrorField = {
-  name: InternalNamePath;
-  errors: string[];
-};
-
-export interface MetadataType {
-  // for map
-  minCount?: number;
-  maxCount?: number;
-  // 携带的指标类信息
-  quotaData?: BaseQuotaType[];
-}
+export type valueType = string | number;

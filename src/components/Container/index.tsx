@@ -1,31 +1,44 @@
-/*
- * @文件描述: 通用的页面容器组件，包含了SafeAreaView和StatusBar
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2020-01-15 17:00:10
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-04-28 11:00:21
- */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, ViewStyle, StyleProp } from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 import { Color } from '../../config';
 import { useHeaderHeight } from '@react-navigation/stack';
+import useToast from '@/hooks/useToast';
 
 interface ContainerProps {
   style?: StyleProp<ViewStyle>;
+  hasHeader?: boolean;
+  loading?: boolean;
 }
 const Container: React.FC<ContainerProps> = props => {
+  const { hasHeader, style, loading, children } = props;
   const height = useHeaderHeight();
+  const { startLoading, finishLoading } = useToast();
+
+  useEffect(() => {
+    if (loading) {
+      startLoading();
+    } else {
+      finishLoading();
+    }
+
+    return () => {
+      finishLoading();
+    };
+  }, [loading, startLoading, finishLoading]);
 
   return (
     <SafeAreaView
-      style={[{ flex: 1, backgroundColor: Color.white, marginTop: height }, props.style]}
-      forceInset={{ top: 'never' }}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      {props.children}
+      style={[{ flex: 1, backgroundColor: Color.white, paddingTop: hasHeader ? height : 0 }, style]}
+      forceInset={{ top: 'never', bottom: hasHeader ? 'always' : 'never' }}
+    >
+      <StatusBar barStyle="dark-content" backgroundColor="rgba(0, 0, 0, 0)" translucent />
+      {children}
     </SafeAreaView>
   );
+};
+Container.defaultProps = {
+  hasHeader: true,
 };
 
 export default Container;

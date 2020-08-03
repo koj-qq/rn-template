@@ -1,11 +1,3 @@
-/*
- * @文件描述: 单选按钮组合
- * @公司: thundersdata
- * @作者: 廖军
- * @Date: 2019-10-04 00:43:00
- * @LastEditors: 于效仟
- * @LastEditTime: 2020-04-29 18:17:27
- */
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { Color, Size } from '../../config';
@@ -73,9 +65,10 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = props => {
         activeOpacity={0.8}
         key={item.value}
         onPress={() => onGroupChange(item.value, item)}
-        style={getButtonStyle(item.value, index)}>
+        style={getButtonStyle(item.value, index)}
+      >
         <View style={getButtonTextStyle(item.value, index)}>
-          <Text style={{ color: item.value === useValue ? Color.dark : '#cccccc' }}>{item.label}</Text>
+          <Text style={{ color: item.value === useValue ? Color.mainTextColor : '#cccccc' }}>{item.label}</Text>
         </View>
       </TouchableOpacity>
     ));
@@ -87,32 +80,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: Size.px(4),
     borderRadius: Size.px(4),
-    backgroundColor: '#f2f2f2'
+    backgroundColor: '#f2f2f2',
   },
   first: {
     borderTopLeftRadius: Size.px(4),
-    borderBottomLeftRadius: Size.px(4)
+    borderBottomLeftRadius: Size.px(4),
   },
   last: {
     borderTopRightRadius: Size.px(4),
-    borderBottomRightRadius: Size.px(4)
+    borderBottomRightRadius: Size.px(4),
   },
   select: {
     backgroundColor: Color.white,
     borderRadius: Size.px(4),
     shadowOffset: { width: -2, height: 2 },
-    shadowColor: Color.dark,
-    shadowOpacity: 0.1
+    shadowColor: Color.mainTextColor,
+    shadowOpacity: 0.1,
   },
   button: {
     height: Size.px(24),
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   borderLeft: {
     borderLeftWidth: Size.px(1),
-    borderLeftColor: '#e8e8e8'
+    borderLeftColor: '#e8e8e8',
   },
   buttonText: {
     fontSize: Size.px(14),
@@ -121,8 +114,8 @@ const styles = StyleSheet.create({
     paddingRight: Size.px(12),
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 export default RadioButtonGroup;

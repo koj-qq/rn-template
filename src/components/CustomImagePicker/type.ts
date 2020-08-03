@@ -1,11 +1,3 @@
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 阮旭松
- * @Date: 2020-01-15 16:14:58
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-03-25 15:27:31
- */
 export interface Response {
   customButton: string;
   didCancel: boolean;

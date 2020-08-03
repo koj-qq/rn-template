@@ -1,14 +1,8 @@
-/*
- * @文件描述: echarts option配置获取
- * 注意：formatter类方法里面不可以引入外部变量 否则会引起图表渲染异常
- */
 import echarts from 'echarts';
-import { BaseChartOption, EChartOption, MetadataType } from '../interfaces/common';
+import { BaseChartOption, EChartOption } from '../interfaces/common';
 import { isObject } from 'lodash';
 import { chartColors } from './colors';
-import { Color, Size } from '../config';
-import { valueFormat } from './string';
-import { provinceList } from '../common';
+import { Size } from '../config';
 
 // 图表初始化标准高度
 const BASE_HEIGHT = 300;
@@ -22,19 +16,6 @@ const DATA_ZOOM_HEIGHT = 70;
 const GRID_BOTTOM_PADDING = 30;
 // 基础间距
 const BASE_PADDING = 5;
-// 基础颜色
-const BASE_CHART_COLOR = [
-  '#2A4061',
-  '#3F5370',
-  '#556681',
-  '#697990',
-  '#7F8CA0',
-  '#949FB0',
-  '#A6AFBD',
-  '#B6BEC9',
-  '#C4CAD3',
-  '#DDE0E6'
-];
 
 const BASE_LINE_COLOR = ['#335687', '#5CB45E', '#F8CA59', '#F89759', '#ED7794', '#685EA0'];
 
@@ -54,8 +35,8 @@ export const getBaseLineOption = (
     axisLine: { show: false },
     axisLabel: {
       color: '#bec0c1',
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   };
 
   // y轴的通用默认配置
@@ -65,14 +46,14 @@ export const getBaseLineOption = (
     axisLine: { show: false },
     axisLabel: {
       show: true,
-      color: '#bcbdbd'
-    }
+      color: '#bcbdbd',
+    },
   };
 
   const option: EChartOption = {
     grid: {
       top: '5%',
-      left: '10%'
+      left: '10%',
     },
     tooltip: {
       trigger: 'axis',
@@ -90,9 +71,9 @@ export const getBaseLineOption = (
         type: 'line',
         lineStyle: {
           width: 30,
-          opacity: 0.2
-        }
-      }
+          opacity: 0.2,
+        },
+      },
     },
     legend: createLegendsFromSeries(series, rowNumber),
     xAxis: xAxis.map(data => {
@@ -102,7 +83,7 @@ export const getBaseLineOption = (
     }),
     yAxis: yAxis.map(data => getYAxisFormatterConfig({ ...yAxisConfig, ...data })),
     series,
-    color: colors
+    color: colors,
   };
   option.grid!['bottom'] = getGridBottom(option, showDataZoom, rowNumber);
   if (showDataZoom) {
@@ -111,261 +92,15 @@ export const getBaseLineOption = (
       dataZoom: [
         {
           type: 'slider',
-          bottom: getLegendHeight(option, rowNumber) + BASE_PADDING
+          bottom: getLegendHeight(option, rowNumber) + BASE_PADDING,
         },
         {
-          type: 'inside'
-        }
-      ]
+          type: 'inside',
+        },
+      ],
     };
   }
   return option;
-};
-
-/** 获取对比饼图的配置项 */
-export const getBaseContrastPieOption = (innerData: echarts.EChartOption.SeriesPie.DataObject[], name: string) => {
-  const option = {
-    backgroundColor: 'rgba(255,255,255,1)',
-    color: BASE_CHART_COLOR,
-    title: {
-      text: name,
-      left: 'center',
-      top: 'center',
-      textStyle: {
-        color: '#000',
-        fontSize: 10,
-        align: 'center'
-      }
-    },
-    series: [
-      {
-        type: 'pie',
-        clockwise: false, //饼图的扇区是否是顺时针排布
-        minAngle: 2, //最小的扇区角度（0 ~ 360）
-        radius: ['18%', '60%'],
-        center: ['50%', '50%'],
-        avoidLabelOverlap: true,
-        roseType: 'area',
-        itemStyle: {
-          //图形样式
-          normal: {
-            borderColor: '#fff',
-            borderWidth: 1
-          }
-        },
-        data: innerData
-      }
-    ]
-  };
-  return option;
-};
-
-/** 获取对比雷达图的配置项 */
-export const getBaseRadarOption = (
-  data: { value: number; avgValue: number; name: string }[] = [],
-  legendData: { name: string }[]
-) => {
-  let indicator = [];
-  const values = data.map(item => +item.value);
-  const avgValues = data.map(item => item.avgValue || 0);
-  if ([...values, ...avgValues].every(item => item === 0 || item === 0.0)) {
-    indicator = data.map(item => ({
-      name: item.name,
-      max: 5
-    }));
-  } else {
-    indicator = data.map(item => ({
-      name: item.name,
-      max: Math.max.apply(null, [...values, ...avgValues])
-    }));
-  }
-
-  const option = {
-    legend: createLegendsFromSeries(legendData, 3),
-    radar: {
-      radius: '50%',
-      center: ['50%', '50%'],
-      splitNumber: 5,
-      axisLine: {
-        lineStyle: {
-          color: '#E6E6E6'
-        }
-      },
-      splitLine: {
-        lineStyle: {
-          color: '#E6E6E6'
-        }
-      },
-      splitArea: {
-        areaStyle: {
-          color: 'white'
-        }
-      },
-      name: {
-        formatter: (value: string) => {
-          if (value.includes(' ')) {
-            const nameArr = value.split(' ');
-            return nameArr.map(item => `{a|${item}}`).join('\nn');
-          }
-          return value;
-        },
-        rich: {
-          a: {
-            color: Color.middleTextColor,
-            align: 'left'
-          }
-        }
-      },
-      indicator: indicator.map(({ name, max }) => ({
-        name,
-        max,
-        color: '#333'
-      }))
-    },
-    series: [
-      {
-        type: 'radar',
-        symbol: 'circle',
-        symbolSize: 6,
-        data: [
-          {
-            value: values,
-            name: legendData[0].name,
-            areaStyle: {
-              normal: {
-                opacity: 0.2
-              }
-            }
-          },
-          {
-            value: avgValues,
-            name: legendData[1].name
-          }
-        ]
-      }
-    ],
-    color: ['#2A4061', '#F89759'],
-    backgroundColor: 'white'
-  };
-  return option;
-};
-
-/** 获取基础饼图的配置项 */
-export const getBasePieOption = (
-  data: echarts.EChartOption.SeriesPie.DataObject[],
-  rowNumber = BASE_LEGEND_ROW_NUMBER
-) => {
-  const series = seriesFormat([
-    {
-      type: 'pie',
-      data
-    }
-  ]);
-  // 图例数量超过6个 使用生成的颜色
-  const colors = getLegendData(series).length > 6 ? chartColors : BASE_CHART_COLOR;
-  // series的通用默认配置
-  const seriesConfig: echarts.EChartOption.Series = {
-    type: 'pie',
-    avoidLabelOverlap: false,
-    radius: [70, 100],
-    center: ['50%', 140],
-    label: {
-      normal: {
-        show: false,
-        position: 'center'
-      },
-      emphasis: {
-        show: true,
-        textStyle: {
-          fontSize: 24,
-          color: '#3b3b3b',
-          fontWeight: 'bold'
-        },
-        formatter: (params: echarts.EChartOption.Tooltip.Format) => {
-          const { data } = params;
-          const name = params.name;
-          if (name) {
-            if (name.includes(' ')) {
-              return `${data.valueFormat}\nn{subLabel|${name.length > 12 ? name.substr(0, 12) + '...' : name}}`;
-            }
-            return `${data.valueFormat}\nn{subLabel|${name.length > 7 ? name.substr(0, 7) + '...' : name}}`;
-          }
-          return '';
-        },
-        rich: {
-          subLabel: {
-            color: '#787878',
-            align: 'center',
-            fontSize: 16,
-            padding: [10, 0]
-          }
-        }
-      }
-    }
-  };
-  const option: EChartOption = {
-    backgroundColor: Color.white,
-    color: colors,
-    toolbox: {
-      show: false
-    },
-    legend: createLegendsFromSeries(series, rowNumber),
-    series: series.map(dataConfig => {
-      const config: object = { ...seriesConfig, ...dataConfig };
-      return config;
-    })
-  };
-  return option;
-};
-
-/**单个项的饼图，用来展示百分比 */
-export const getSingleItemPieOption = (value: number, name: string) => {
-  return {
-    series: [
-      {
-        color: BASE_CHART_COLOR,
-        type: 'pie',
-        radius: ['60%', '70%'],
-        stillShowZeroSum: false,
-        hoverAnimation: false,
-        selectedOffset: 0,
-        label: {
-          formatter: function (params: echarts.EChartOption.Tooltip.Format) {
-            return `{a|${params.value}%}\nn{b|${params.name}}`;
-          },
-          position: 'center',
-          rich: {
-            a: {
-              color: Color.mainTextColor,
-              fontSize: Size.px(28),
-              lineHeight: Size.px(40)
-            },
-            b: {
-              color: Color.middleTextColor,
-              fontSize: Size.px(16),
-              lineHeight: Size.px(22)
-            }
-          }
-        },
-        labelLine: {
-          show: false
-        },
-        data: [
-          {
-            value,
-            name
-          },
-          {
-            value: 100 - value,
-            name: '',
-            label: {
-              show: false
-            }
-          }
-        ]
-      }
-    ]
-  };
 };
 
 /** 判断echarts是否是空数据 */
@@ -408,7 +143,7 @@ export const getGridBottom = (option: EChartOption, showDataZoom: boolean, rowNu
  * 获取图例占用的高度
  * @param option
  */
-export const getLegendHeight = (option: echarts.EChartOption, rowNumber?: number) => {
+export const getLegendHeight = (option: EChartOption, rowNumber?: number) => {
   const { legend, series = [] } = option;
   // 不存在图例的情况
   if (isObject(legend) && (legend as echarts.EChartOption.Legend).show === false) {
@@ -433,10 +168,10 @@ export const getLegendHeightByData = (
 export const getLegendData = (series: echarts.EChartOption.Series[] = []) => {
   const allLegendData: echarts.EChartOption.Legend.LegendDataObject[] = [];
   series.forEach(item => {
-    const data: { name: string }[] = item['data'] || [];
+    const data = (item['data'] || []) as Array<{ name: string }>;
     // 饼图的图例在series.data里面
     if (item.type === 'pie') {
-      allLegendData.push(...data.map(({ name }) => ({ name, icon: 'circle' })));
+      allLegendData.push(...data.map(item => ({ name: item.name, icon: 'circle' })));
     } else {
       allLegendData.push({ name: item['name'], icon: item.type === 'line' ? '' : 'circle' });
     }
@@ -453,26 +188,26 @@ const LEGEND_CONFIG = {
     formatter: (name: string) => `{a| ${name}}`,
     width: Size.DEVICE_WIDTH,
     itemGap: 0,
-    left: 'left'
+    left: 'left',
   },
   2: {
     formatter: (name: string) => `{a| ${name.length > 12 ? name.substring(0, 12) + '...' : name}}`,
     width: Math.floor(Size.DEVICE_WIDTH / 2) - 40,
     itemGap: 25,
-    left: 'center'
+    left: 'center',
   },
   3: {
     formatter: (name: string) => `{a| ${name.length > 8 ? name.substring(0, 8) + '...' : name}}`,
     width: Math.floor(Size.DEVICE_WIDTH / 3) - 60,
     itemGap: 25,
-    left: 'center'
+    left: 'center',
   },
   4: {
     formatter: (name: string) => `{a| ${name.length > 4 ? name.substring(0, 4) + '...' : name}}`,
     width: Math.floor(Size.DEVICE_WIDTH / 4) - 80,
     itemGap: 25,
-    left: 'center'
-  }
+    left: 'center',
+  },
 };
 export const createLegendsFromSeries = (series: echarts.EChartOption.Series[] = [], rowNumber: number) => {
   const legends: echarts.EChartOption.Legend[] = [];
@@ -507,11 +242,11 @@ export const createLegendsFromSeries = (series: echarts.EChartOption.Series[] = 
             color: '#848484',
             fontSize: 12,
             width: autoConfig.width || 60,
-            height: BASE_LEGEND_HEIGHT
-          }
-        }
+            height: BASE_LEGEND_HEIGHT,
+          },
+        },
       },
-      itemHeight: BASE_LEGEND_HEIGHT
+      itemHeight: BASE_LEGEND_HEIGHT,
     };
     legends.push(config);
   }
@@ -543,9 +278,9 @@ export const seriesFormat = (series: echarts.EChartOption.Series[]) => {
         }
         return {
           ...valueItem,
-          valueFormat: `${valueStr}${valueItem['unit'] || ''}`
+          valueFormat: `${valueStr}${valueItem['unit'] || ''}`,
         };
-      })
+      }),
     });
   });
   return newSeries;
@@ -598,10 +333,10 @@ export const getBaseTrendOption = (fetchOption: BaseChartOption, showDataZoom = 
     itemStyle: {
       normal: {
         // bar 上面两个圆角
-        barBorderRadius: [5, 5, 0, 0]
-      }
+        barBorderRadius: [5, 5, 0, 0],
+      },
     },
-    symbolSize: 8
+    symbolSize: 8,
   };
   // x轴的通用默认配置
   const xAxisConfig: echarts.EChartOption.XAxis = {
@@ -609,8 +344,8 @@ export const getBaseTrendOption = (fetchOption: BaseChartOption, showDataZoom = 
     axisLine: { show: false },
     axisLabel: {
       color: '#bec0c1',
-      fontSize: 14
-    }
+      fontSize: 14,
+    },
   };
 
   // y轴的通用默认配置
@@ -620,15 +355,15 @@ export const getBaseTrendOption = (fetchOption: BaseChartOption, showDataZoom = 
     axisLine: { show: false },
     axisLabel: {
       show: true,
-      color: '#bcbdbd'
-    }
+      color: '#bcbdbd',
+    },
   };
 
   const option: EChartOption = {
     grid: {
       top: '10%',
       left: hasYAxis(series, 0) ? '15%' : 0,
-      right: hasYAxis(series, 1) ? '10%' : '5%'
+      right: hasYAxis(series, 1) ? '10%' : '5%',
     },
     tooltip: {
       trigger: 'axis',
@@ -648,9 +383,9 @@ export const getBaseTrendOption = (fetchOption: BaseChartOption, showDataZoom = 
         type: 'line',
         lineStyle: {
           width: 30,
-          opacity: 0.2
-        }
-      }
+          opacity: 0.2,
+        },
+      },
     },
     legend: createLegendsFromSeries(series, rowNumber || 3),
     xAxis: xAxis.map(data => {
@@ -660,7 +395,7 @@ export const getBaseTrendOption = (fetchOption: BaseChartOption, showDataZoom = 
     }),
     yAxis: yAxis.map(data => getYAxisFormatterConfig({ ...yAxisConfig, ...data })),
     series: series.map(data => ({ ...seriesConfig, ...data })),
-    color: colors
+    color: colors,
   };
   option.grid!['bottom'] = getGridBottom(option, showDataZoom);
   if (showDataZoom) {
@@ -669,109 +404,14 @@ export const getBaseTrendOption = (fetchOption: BaseChartOption, showDataZoom = 
       dataZoom: [
         {
           type: 'slider',
-          bottom: getLegendHeight(option) + BASE_PADDING
+          bottom: getLegendHeight(option) + BASE_PADDING,
         },
 
         {
-          type: 'inside'
-        }
-      ]
+          type: 'inside',
+        },
+      ],
     };
   }
-  return option;
-};
-
-/** 获取基础地图的配置项 */
-export const getBaseMapOption = (fetchOption: BaseChartOption, metadata?: MetadataType) => {
-  const { series = [] } = fetchOption || {};
-  const { maxCount = 200 } = metadata || {};
-  // series的通用默认配置
-  const seriesConfig: echarts.EChartOption.Series = {
-    type: 'map',
-    map: 'china',
-    geoIndex: 0,
-    aspectScale: 0.75, //长宽比
-    showLegendSymbol: false, // 存在legend时显示
-    label: {
-      normal: {
-        show: true
-      },
-      emphasis: {
-        show: false,
-        textStyle: {
-          color: '#fff'
-        }
-      }
-    },
-    roam: true,
-    itemStyle: {
-      normal: {
-        areaColor: '#ccc',
-        borderColor: '#3B5077'
-      },
-      emphasis: {
-        areaColor: '#ccc'
-      }
-    },
-    animation: false
-  };
-  const option: EChartOption = {
-    legend: {
-      top: 0
-    },
-    visualMap: [
-      {
-        type: 'continuous',
-        show: true,
-        min: 0,
-        max: maxCount,
-        formatter: valueFormat,
-        itemHeight: 80,
-        left: 0,
-        top: 'bottom',
-        calculable: true,
-        seriesIndex: [0],
-        inRange: {
-          color: ['#fcdd2d', '#f95820']
-        }
-      }
-    ],
-    geo: {
-      show: true,
-      silent: true,
-      roam: false,
-      map: 'china',
-      zoom: 1.1,
-      center: [100, 36.5],
-      label: {
-        normal: {
-          show: false
-        },
-        emphasis: {
-          show: false
-        }
-      },
-      itemStyle: {
-        normal: {
-          areaColor: '#ccc',
-          borderColor: '#fff'
-        },
-        emphasis: {
-          areaColor: '#ccc'
-        }
-      }
-    },
-    series: (series as echarts.EChartOption.SeriesMap[]).map(({ data, ...rest }) => {
-      const config: object = {
-        ...seriesConfig,
-        ...rest,
-        data: (data as echarts.EChartOption.SeriesMap.DataObject[])?.map(({ name, value }) => ({
-          name: provinceList.find(item => item.province_name === name)?.simpleName,
-          value
-        }))
-      };
-      return config;
-    })
-  };
   return option;
 };

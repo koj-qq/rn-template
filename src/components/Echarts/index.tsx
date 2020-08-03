@@ -3,15 +3,15 @@ import { View, Platform } from 'react-native';
 import { WebView as RNWebView } from 'react-native-webview';
 import renderChart from './utils/renderChart';
 import echartsLib from './lib/echarts';
+import { EChartOption } from '@/interfaces/common';
 
 export interface EChartsProps {
-  option: echarts.EChartOption;
+  option: EChartOption;
   backgroundColor?: string;
   width?: number;
   height?: number;
   disabledSelect?: boolean;
   renderLoading?: () => JSX.Element;
-  isHighlightFirst?: boolean;
 }
 
 interface State {
@@ -26,14 +26,14 @@ class ECharts extends Component<EChartsProps> {
     super(props);
     this.state = {
       isFirstLoad: true,
-      setOption: this.setOption
+      setOption: this.setOption,
     };
   }
 
   static getDerivedStateFromProps(props: EChartsProps, state: State) {
     if (state.isFirstLoad) {
       return {
-        isFirstLoad: false
+        isFirstLoad: false,
       };
     } else {
       state.setOption(props);
@@ -42,7 +42,7 @@ class ECharts extends Component<EChartsProps> {
   }
 
   static defaultProps = {
-    backgroundColor: '#00000000'
+    backgroundColor: '#00000000',
   };
 
   render() {
@@ -61,7 +61,7 @@ class ECharts extends Component<EChartsProps> {
           style={{ backgroundColor: this.props.backgroundColor }} // 设置背景色透明，修复android闪白
           scrollEnabled={false}
           javaScriptEnabled={true}
-          injectedJavaScript={renderChart(this.props, true, this.props.isHighlightFirst)}
+          injectedJavaScript={renderChart(this.props, true)}
           startInLoadingState={false}
           source={Platform.OS === 'ios' ? require('./tmp/tpl.html') : { uri: 'file:///android_asset/tpl.html' }}
         />

@@ -1,14 +1,6 @@
-/*
- * @文件描述: 根据pont-config.json文件获取到对应的后端请求地址
- * @公司: thundersdata
- * @作者: 黄姗姗
- * @Date: 2019-10-30 18:36:20
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-04-22 15:18:21
- */
 import pontConfig from './pont-config.json';
 
-export default function() {
+export default function () {
   const result = {};
   pontConfig.origins.forEach(origin => {
     const { name, originUrl } = origin;
