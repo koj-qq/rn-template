@@ -9,7 +9,7 @@ export function appUpdate(androidDownloadUrl: string, appStoreUrl: string, versi
         // 调起原生下载管理
         useDownloadManager: true,
         // 下载的安装包保存的名字
-        title: `rnTemplateApp-${version}.apk`,
+        title: `rnTemplate-${version}.apk`,
         // 下载时候顶部通知栏的描述
         description: '下载完成之后将会自动安装',
         // 下载的文件格式

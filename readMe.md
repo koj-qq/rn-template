@@ -60,3 +60,26 @@ Sentry.init({
 打开`android`目录下的`sentry.properties`文件进行修改
 ### 4.2 IOS配置
 打开`ios`目录下的`sentry.properties`文件进行修改
+
+## 5. app图标和启动页替换
+访问[App Icon Maker]('https://appiconmaker.co/')，根据UI设计师提供的1024*1024的logo生成ios和安卓的各种尺寸的logo
+### 5.1 安卓配置
+#### 5.1.1 APP图标替换
+因为安卓同时也支持圆角图标，所以建议让UI设计师也提供一个圆角的logo
+打开`android/app/src/main/res/`，以`mipmap-`开头的文件夹下存放的就是app图标了，只需要把我们的图标按照对应的映射关系放到正确的文件夹下就可以了。
+具体映射关系如下：
+- hdpi: 72*72
+- mdpi: 48*48
+- xhdpi: 96*96
+- xxhdpi: 144*144
+- xxxhdpi: 192*192
+#### 5.1.2 启动页替换
+打开`android/app/src/main/res/drawable`，这个文件夹存放的就是启动页的图片了。
+### 5.2 IOS配置
+#### 5.2.1 APP图标替换
+打开xcode，项目目录下选择`Images.xcassets`，然后选择`AppIcon`，打开的就是ios的启动图标了。
+只需要把我们上面生成的ios图标按照对应的映射关系进行替换就可以了。
+具体的映射关系如下：
+![ios-icon](md-images/ios-icon.png)
+#### 5.2.2 启动页替换
+![ios-launch](md-images/ios-launch.png)
