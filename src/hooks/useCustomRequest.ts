@@ -5,12 +5,14 @@ import { Toast } from '@ant-design/react-native';
 import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { LOGIN_FAILURE } from '@/common';
+import useToast from './useToast';
 
 export function useCustomRequest<R, P extends unknown[] = []>(
   service: CombineService<R, P>,
   options: BaseOptions<R, P> = {}
 ) {
   const { signOut } = useContext(AuthContext);
+  const { toastFail } = useToast();
   const [netReady, setNetReady] = useState(false);
 
   useEffect(() => {
@@ -22,21 +24,24 @@ export function useCustomRequest<R, P extends unknown[] = []>(
     });
   }, []);
 
-  const { ready, refreshDeps = [], ...resOptions } = options;
+  const { ready, refreshDeps = [], onError, ...restOptions } = options;
   const result = useRequest(service, {
     refreshDeps: [netReady, ...refreshDeps],
     ready: netReady && ready,
     throwOnError: true,
-    ...resOptions,
-  });
-  const { error } = result;
-  if (error) {
-    try {
-      const { code } = JSON.parse(error.message);
-      if (code === LOGIN_FAILURE.失效 || code === LOGIN_FAILURE.封禁) {
-        signOut();
+    onError: (error, params) => {
+      onError && onError(error, params);
+      try {
+        const { code, message } = JSON.parse(error.message);
+        if (code === LOGIN_FAILURE.失效 || code === LOGIN_FAILURE.封禁) {
+          signOut();
+        }
+        toastFail(message);
+      } catch (err) {
+        toastFail(err.message);
       }
-    } catch (error) {}
-  }
+    },
+    ...restOptions,
+  });
   return result;
 }
