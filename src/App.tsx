@@ -1,12 +1,16 @@
 import React from 'react';
-import { Text, SafeAreaView, StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+
+import { MainStack } from './stacks/MainStack';
 
 const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="dark-content" animated translucent backgroundColor="transparent" />
-      <Text style={{ marginTop: StatusBar.currentHeight }}>123</Text>
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <MainStack />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
 
