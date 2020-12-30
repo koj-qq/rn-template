@@ -1,14 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowDisablePreview">true</item>
-        <!-- Android 4.4 API 19 透明状态栏 -->
-        <item name="android:windowTranslucentStatus">true</item>
-        <!-- API21 Android 透明状态栏 -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">#000000</item>
     </style>
-    <style name="SplashScreenTheme" parent="SplashScreen_SplashTheme">
-        <item name="colorPrimaryDark">@color/status_bar_color</item>
-    </style>
+
 </resources>

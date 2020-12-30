@@ -39,6 +39,7 @@ npm-debug.log
 yarn-error.log
 yarn.lock
 package-lock.json
+Podfile.lock
 
 # BUCK
 buck-out/

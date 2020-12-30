@@ -8,9 +8,3 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
--keep class com.tencent.mm.sdk.** {
-  *;
-}
--keep class com.thundersdata.rntemplate.BuildConfig { 
-  *; 
-}
