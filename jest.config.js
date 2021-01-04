@@ -1,12 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { defaults: tsjPreset } = require('ts-jest/presets');
+
 const jestModules = ['react-native', '@td-design/react-native'].join('|');
 
 module.exports = {
+  ...tsjPreset,
   preset: 'react-native',
   setupFiles: ['<rootDir>/jest/setup.js'],
   setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
   transform: {
-    '^.+\\.(js)$': '<rootDir>/node_modules/babel-jest',
-    '\\.(ts|tsx)$': '<rootDir>/node_modules/ts-jest',
+    ...tsjPreset.transform,
+    '\\.js$': '<rootDir>/node_modules/react-native/jest/preprocessor.js',
   },
   transformIgnorePatterns: [`node_modules/(?!(${jestModules})/)`],
   moduleNameMapper: {
