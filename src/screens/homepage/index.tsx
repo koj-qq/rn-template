@@ -1,20 +1,17 @@
 import React from 'react';
-import { Box, Text, WhiteSpace, WingBlank } from '@td-design/react-native';
-
+import { Box, Text, WhiteSpace } from '@td-design/react-native';
 import Container from '@/components/Container';
+// import { Text } from 'react-native';
 
-export default function () {
+export default function Homepage() {
   return (
+    // <Text>hello</Text>
     <Container>
-      <WingBlank>
-        <Box>
-          <Text variant="primaryBody">hello, td-design</Text>
-        </Box>
+      <Box>
+        <Text>hello, td-design</Text>
         <WhiteSpace />
-        <Box>
-          <Text variant="primaryTipReverse">hello, react-native</Text>
-        </Box>
-      </WingBlank>
+        <Text>hello, react-native</Text>
+      </Box>
     </Container>
   );
 }

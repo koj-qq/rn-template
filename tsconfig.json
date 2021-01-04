@@ -25,7 +25,8 @@
     "incremental": false,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "test-utils": ["jest/test-utils"],
     }
   },
   "include": ["./src/services/api.d.ts", "./src/**/*", "./typings.d.ts"],
