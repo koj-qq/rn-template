@@ -16,7 +16,7 @@
     "commit": "git-cz",
     "jetifier": "npx jetifier",
     "pod": "cd ios && pod install && cd ..",
-    "test": "jest"
+    "test": "jest --watch"
   },
   "config": {
     "commitizen": {
@@ -67,6 +67,7 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@shopify/restyle": "^1.4.0",
     "@testing-library/jest-native": "^3.4.3",
+    "@testing-library/react-hooks": "^3.7.0",
     "@testing-library/react-native": "^7.1.0",
     "@types/color": "^3.0.1",
     "@types/jest": "^26.0.19",
