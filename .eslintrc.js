@@ -21,7 +21,7 @@ module.exports = {
   },
   rules: {
     complexity: ['warn', { max: 6 }],
-    'no-unused-vars': 'error',
+    'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
