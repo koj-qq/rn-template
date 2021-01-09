@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Text, WhiteSpace } from '@td-design/react-native';
-import Container from '@/components/Container';
 import { Image } from 'react-native';
+import { Box, Text, WhiteSpace } from '@td-design/react-native';
+import Container from '@/common/components/Container';
 
 export default function Homepage() {
   return (

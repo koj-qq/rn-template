@@ -11,15 +11,12 @@ export const init = new defs.authorization.PagingEntity();
 
 export async function fetch(params = {}) {
   const request = await initRequest();
-  const result = await request.post(
-    backEndUrl + '/role/resource/listByBusinessValues',
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      params,
+  const result = await request.get(backEndUrl + '/role/resource/listPagination', {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    params,
+  });
   if (result) {
     if (!result.success) {
       throw new Error(JSON.stringify(result));

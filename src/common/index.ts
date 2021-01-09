@@ -1,5 +1,5 @@
 import { extend, ResponseError } from 'umi-request';
-import { getToken } from './utils/auth';
+import { getToken } from '@/utils/auth';
 import { LoginFailureEnum } from './enums';
 
 let controller = new AbortController();

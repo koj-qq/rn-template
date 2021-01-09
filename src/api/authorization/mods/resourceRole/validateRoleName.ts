@@ -1,5 +1,5 @@
 /**
- * @description 保存ResourceRole并绑定用户角色
+ * @description 校验角色是否已经存在
  */
 
 import serverConfig from '../../../../../server.config';
@@ -7,24 +7,21 @@ import { initRequest } from '../../../../common';
 
 const backEndUrl = serverConfig()['authorization'];
 
-export const init = undefined;
+export const init = [];
 
-export async function fetch(data = {}) {
+export async function fetch(params = {}) {
   const request = await initRequest();
-  const result = await request.post(
-    backEndUrl + '/role/resource/save/addUser',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
+  const result = await request.get(backEndUrl + '/role/resource/validateRoleName', {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    params,
+  });
   if (result) {
     if (!result.success) {
       throw new Error(JSON.stringify(result));
     } else {
-      return result.data || undefined;
+      return result.data || [];
     }
   } else {
     throw new Error(JSON.stringify({ message: '接口未响应' }));

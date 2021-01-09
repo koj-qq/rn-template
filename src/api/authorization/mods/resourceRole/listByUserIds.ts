@@ -11,15 +11,12 @@ export const init = [];
 
 export async function fetch(data = {}) {
   const request = await initRequest();
-  const result = await request.post(
-    backEndUrl + '/role/resource/listByUserIds',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
+  const result = await request.post(backEndUrl + '/role/resource/listByUserIds', {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    data,
+  });
   if (result) {
     if (!result.success) {
       throw new Error(JSON.stringify(result));

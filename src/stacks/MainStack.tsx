@@ -1,9 +1,9 @@
 import React from 'react';
-import { CardStyleInterpolators, createStackNavigator, StackHeaderLeftButtonProps } from '@react-navigation/stack';
 import { TouchableOpacity } from 'react-native';
+import { CardStyleInterpolators, createStackNavigator, StackHeaderLeftButtonProps } from '@react-navigation/stack';
 import { Theme, useTheme, helpers, Icon } from '@td-design/react-native';
 
-import Homepage from '../screens/homepage';
+import Homepage from '@/modules/homepage';
 
 const { px } = helpers;
 const Stack = createStackNavigator();

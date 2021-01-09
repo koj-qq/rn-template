@@ -1,5 +1,5 @@
 /**
- * @description 删除没有用户使用的角色
+ * @description 获取能访问businessValue的RoleId
  */
 
 import serverConfig from '../../../../../server.config';
@@ -11,15 +11,12 @@ export const init = undefined;
 
 export async function fetch(params = {}) {
   const request = await initRequest();
-  const result = await request.get(
-    backEndUrl + '/role/resource/deleteUnusedRole',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      params,
+  const result = await request.get(backEndUrl + '/deployment/authz/getRoleIdToBusinessValue', {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    params,
+  });
   if (result) {
     if (!result.success) {
       throw new Error(JSON.stringify(result));

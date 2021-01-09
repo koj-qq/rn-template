@@ -6,3 +6,5 @@
 cd assets/
 sh ./cwebp.sh
 ```
+
+## 新的项目结构

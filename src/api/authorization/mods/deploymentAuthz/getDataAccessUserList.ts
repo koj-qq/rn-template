@@ -1,5 +1,5 @@
 /**
- * @description 根据业务拓展字段查询角色(不带分页)
+ * @description 获取此数据权限的用户列表
  */
 
 import serverConfig from '../../../../../server.config';
@@ -9,17 +9,14 @@ const backEndUrl = serverConfig()['authorization'];
 
 export const init = [];
 
-export async function fetch(data = {}) {
+export async function fetch(params = {}) {
   const request = await initRequest();
-  const result = await request.post(
-    backEndUrl + '/role/resource/listByBusinessValueList',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
+  const result = await request.get(backEndUrl + '/deployment/authz/getDataAccessUserList', {
+    headers: {
+      'Content-Type': 'application/json',
     },
-  );
+    params,
+  });
   if (result) {
     if (!result.success) {
       throw new Error(JSON.stringify(result));
