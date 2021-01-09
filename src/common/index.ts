@@ -51,16 +51,6 @@ export const PAGE = 1;
 export const PAGE_SIZE = 10;
 export const EMPTY_PARAM_RESULT = { page: PAGE, total: 0, pageSize: PAGE_SIZE, list: [] };
 
-export function removeEmpty(obj: object) {
-  const newObj = {};
-  Object.keys(obj).forEach(key => {
-    if (!['', null, undefined].includes(obj[key])) {
-      newObj[key] = obj[key];
-    }
-  });
-  return newObj;
-}
-
 const codeMessage: { [key: number]: string } = {
   400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
   401: '用户没有权限（令牌、用户名、密码错误）。',

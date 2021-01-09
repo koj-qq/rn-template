@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import produce from 'immer';
+import { convertNullToEmptyString } from '@/utils';
 
 const TOKEN_KEY = 'token';
 const USER_INFO = 'userInfo';
@@ -18,14 +18,6 @@ export function saveUserInfo<T>(info: T) {
   AsyncStorage.setItem(USER_INFO, JSON.stringify(userInfo));
 }
 
-export async function getUserInfo() {
-  const result = await AsyncStorage.getItem(USER_INFO);
-  if (result) {
-    return JSON.parse(result);
-  }
-  return {};
-}
-
 /**
  * @功能描述: 退出登录
  * @参数:
@@ -40,25 +32,5 @@ export function signOut() {
       .catch(() => {
         reject(false);
       });
-  });
-}
-
-/**
- * @功能描述: 判断是否已登录
- * @参数:
- * @返回值:
- */
-export async function isSignedIn() {
-  const result = await AsyncStorage.getItem(TOKEN_KEY);
-  return !!result;
-}
-
-export function convertNullToEmptyString<T extends {}>(obj: T) {
-  return produce(obj, draft => {
-    Object.entries(draft).forEach(([key, val]) => {
-      if (val === null || val === undefined) {
-        draft[key] = '';
-      }
-    });
   });
 }
