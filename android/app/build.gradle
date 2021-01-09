@@ -96,7 +96,7 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore.
@@ -128,6 +128,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    aaptOptions { 
+        cruncherEnabled = false 
+    }
+
     defaultConfig {
         applicationId "com.rntemplate"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -156,6 +160,7 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
+            shrinkResources true
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
