@@ -50,3 +50,61 @@ authService.saveUserInfo(res.userInfo);
 **我们通过这样的划分，就可以形成非常好的团队协作。每个人可以负责一个独立的模块，或者某几个人组成一个开发小组，负责某一个模块，每个人负责这个模块下的某一个功能。功能或者模块的外部依赖都通过注入的方式获取，可以大大降低项目的维护成本。**
 
 再有一点好处就是非常方便测试。UI 需要测试吗？不需要，因为没有逻辑。只需要一个 snapshot 就足够判断组件的变动是否符合预期，我们只需要测试逻辑部分。逻辑部分因为是 hooks，有专门的工具来帮助我们快速进行测试和模拟（详见`hooks`目录下的测试用例）。这样我们就可以有足够的自信保证逻辑的正确性。
+
+## 如何集成`Sentry`
+
+1. 安装依赖
+
+```code
+yarn add @sentry/react-native
+```
+
+2. 安装原生支持
+
+```code
+yarn sentry-wizard -i reactNative -p ios android
+```
+
+3. 修改`index.js`
+
+```js
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://8c9688d0437a4923a890211af203e69c@o503055.ingest.sentry.io/5587668', // 替换成你自己的
+});
+```
+
+4. 验证
+
+- 抛异常验证：
+
+```js
+<Button title="click" onPress={() => {
+  throw new Error("My First Sentry error!");
+}}>
+```
+
+- Sentry 捕获异常
+
+```js
+<Button title="click" onPress={() => {
+  Sentry.captureException(new Error('My Second Sentry error!'));
+}}>
+```
+
+- 自定义 Tag 和额外参数
+
+```js
+<Button title="click" onPress={() => {
+  Sentry.withScope(scope => {
+    scope.setTag('tag', 'custom');
+    scope.setExtras({
+      // ...
+    });
+    Sentry.captureException(new Error('My Third Sentry error!'));
+  })
+}}>
+```
+
+_`pod install` 如果失败，请先执行`pod repo update`_

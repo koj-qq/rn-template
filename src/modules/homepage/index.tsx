@@ -3,6 +3,7 @@ import { Image } from 'react-native';
 import { Box, Button, Input, Text, WhiteSpace } from '@td-design/react-native';
 import Container from '@/common/components/Container';
 import { AuthService } from '../Auth/useAuthService';
+import sentryReport, { Severity } from '@/utils/sentry';
 
 export default function Homepage() {
   const authService = useContext(AuthService);
@@ -17,7 +18,12 @@ export default function Homepage() {
         <WhiteSpace />
         <Input placeholder="hello" />
         <WhiteSpace />
-        <Button title="click" onPress={() => console.log('123')} />
+        <Button
+          title="click"
+          onPress={() => {
+            sentryReport(new Error('My Forth Sentry Error'), 'custom', Severity.Error);
+          }}
+        />
         <WhiteSpace />
         <Button title="退出登录" onPress={() => authService.logout()} />
       </Box>

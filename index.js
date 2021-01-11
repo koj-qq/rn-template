@@ -3,6 +3,11 @@ import { AppRegistry } from 'react-native';
 import { name as appName } from './app.json';
 import App from './src/App';
 import '@/api';
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://0bd170cf72a04e12ac61a19ade59a909@o503055.ingest.sentry.io/5587578',
+});
 
 console.disableYellowBox = true;
 
