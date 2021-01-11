@@ -10,6 +10,7 @@ export default function Homepage() {
   return (
     <Container>
       <Box>
+        <Text testID="homepage">Homepage</Text>
         <Text>hello, td-design</Text>
         <WhiteSpace />
         <Image source={require('@/assets/certify_fail.webp')} style={{ width: 200, height: 200 }} />

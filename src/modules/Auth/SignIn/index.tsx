@@ -9,7 +9,7 @@ export default () => {
 
   return (
     <Container>
-      <Text>signin</Text>
+      <Text testID="signIn">signIn</Text>
       <Button
         title="登录"
         onPress={() => {
