@@ -23,5 +23,6 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 2,
     'react-hooks/rules-of-hooks': 2,
     'react-hooks/exhaustive-deps': 2,
+    '@typescript-eslint/ban-ts-comment': 0,
   },
 };

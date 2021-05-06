@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { enableScreens } from 'react-native-screens';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
+// import { NavigationContainer } from '@react-navigation/native';
 import RNBootSplash from 'react-native-bootsplash';
 import { SWRConfig } from 'swr';
 import { useUpdateAtom } from 'jotai/utils';
@@ -47,9 +47,9 @@ export default function App() {
         }}
       >
         <ThemeProvider theme={dark ? darkTheme : theme}>
-          <NavigationContainer>
-            <Stack />
-          </NavigationContainer>
+          {/* <NavigationContainer> */}
+          <Stack />
+          {/* </NavigationContainer> */}
         </ThemeProvider>
       </SWRConfig>
     </SafeAreaProvider>

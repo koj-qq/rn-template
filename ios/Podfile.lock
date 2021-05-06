@@ -309,7 +309,7 @@ PODS:
     - React-perflogger (= 0.64.0)
   - ReactNativeExceptionHandler (2.10.10):
     - React-Core
-  - RNBootSplash (3.2.1):
+  - RNBootSplash (3.2.3):
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
@@ -558,7 +558,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: cad74a1eaa53ee6e7a3620231939d8fe2c6afcf0
   ReactCommon: cfe2b7fd20e0dbd2d1185cd7d8f99633fbc5ff05
   ReactNativeExceptionHandler: b11ff67c78802b2f62eed0e10e75cb1ef7947c60
-  RNBootSplash: a7750857d7c7c51fb37ba453cd506b5950e62f74
+  RNBootSplash: 8ef5ffa03dadd35f66510b42960ce40f397c98bf
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 5256da29a92406cac439ac6605719e233714a86a
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
